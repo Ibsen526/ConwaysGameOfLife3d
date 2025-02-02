@@ -2,7 +2,6 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
@@ -18,6 +17,7 @@ hs_err_pid*
 .idea/
 *.iml
 *.iws
+.settings/
 
 # Mac
 .DS_Store
@@ -32,6 +32,5 @@ target/
 # Compiled Files
 *.class
 bin/
-build/
 /bin1/
 java/build/**
