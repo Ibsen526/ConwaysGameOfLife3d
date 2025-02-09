@@ -31,17 +31,16 @@ public class Panel extends JPanel {
 	
 	private Field field;
 	
-	Light light;
+	private Light light;
 	
 	Panel (int PW, int PH) {
-		//Panel = new JPanel(new GridLayout(1,7));
 		this.setPreferredSize(new Dimension(PW, PH));
-		P_W = PW; P_H = PH;
+		P_W = PW;
+		P_H = PH;
 		this.setDoubleBuffered(true);
-		//this.setBounds(0, 0, PW, PH);
 
 		cam = new Camera(3.0f, 3.0f, 3.0f, this, P_W, P_H);
-		cube = new Mesh("C:\\Users\\Marti\\Desktop\\Ranzig\\Programme_nichtSchule\\Java_Projekte\\3D_Graphics_API\\assets\\cube3.obj");
+		cube = new Mesh(".\\cube3.obj");
 		light = new Light(new Vec3(-1.0f, 1.0f, 1.0f), new Vec3(0.0f, 0.0f, -1.0f), 1.0f);
 
 		
@@ -50,9 +49,9 @@ public class Panel extends JPanel {
 			@Override
             public void run() {
                 elapsedTime++;
-                rotX = (float) Math.cos(elapsedTime) * 2.0f;
-                rotY = (float) Math.sin(elapsedTime) * 2.0f;
-                rotZ = (float) Math.cos(elapsedTime) * 2.0f;
+                rotX = (float)Math.cos(elapsedTime / 10f) * 2.0f;
+                rotY = (float)Math.sin(elapsedTime / 10f) * 2.0f;
+                rotZ = (float)Math.cos(elapsedTime / 10f) * 2.0f;
                 repaint();
             }
 		}, 1, 10);	
@@ -61,33 +60,32 @@ public class Panel extends JPanel {
 		
 	}
 	
-	public void paintComponent(Graphics g) {
-		//Graphics2D g2D = (Graphics2D) g;
-		g.setColor(new Color(0, 0, 0));
-		g.fillRect(0, 0, P_W, P_H);
+	public void paintComponent(Graphics graphics) {
+		graphics.setColor(new Color(0, 0, 0));
+		graphics.fillRect(0, 0, P_W, P_H);
 				
 		cam.ViewMatrix();		
 				
 		ArrayList<Triangle> trianglesToRaster = new ArrayList<Triangle>();
 		
-		trianglesToRaster = field.CalcFieldMeshes(g, cube, cam, light, P_W, P_H, new Vec3(rotX, rotY, rotZ));
+		trianglesToRaster = field.CalcFieldMeshes(graphics, cube, cam, light, P_W, P_H, new Vec3(rotX, rotY, rotZ));
 
 		//Now sort the triangles (only a hack, because depth buffer would be better)
 		ArrayList<Triangle> sortedTriangles = SortTriangles(trianglesToRaster);
 		
 		//Draw them to the screen 
-		DrawTriangle(g, sortedTriangles);
+		DrawTriangle(graphics, sortedTriangles);
 	}	
 
-	public static void DrawTriangle(Graphics g, ArrayList<Triangle> t) {
-		for (Triangle tri : t) {
+	public static void DrawTriangle(Graphics graphics, ArrayList<Triangle> triangles) {
+		for (Triangle triangle : triangles) {
 			Polygon p = new Polygon();
-			p.addPoint((int) tri.p1.x, (int) tri.p1.y);
-			p.addPoint((int) tri.p2.x, (int) tri.p2.y);
-			p.addPoint((int) tri.p3.x, (int) tri.p3.y);
+			p.addPoint((int) triangle.p1.x, (int) triangle.p1.y);
+			p.addPoint((int) triangle.p2.x, (int) triangle.p2.y);
+			p.addPoint((int) triangle.p3.x, (int) triangle.p3.y);
 			
-			g.setColor(tri.col);
-			g.fillPolygon(p);
+			graphics.setColor(triangle.col);
+			graphics.fillPolygon(p);
 		}
 	}
 	
@@ -113,7 +111,7 @@ public class Panel extends JPanel {
 		return t;		
 	}
 	
-	public void ResetField() {
-		field.InitFieldValues();
+	public void ResetField(int presetIndex) {
+		field.InitFieldValues(presetIndex);
 	}
 }

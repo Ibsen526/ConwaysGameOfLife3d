@@ -4,22 +4,18 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import LoadFiles.LoadObj;
-import LoadFiles.LoadObjReturn;
 import Util.Vec3;
 import Util.Vec4;
 import Util.Mat4;
 import Util.Math3D;
 
 public class Mesh {
-	//public ArrayList<Vec3> vertices = new ArrayList<Vec3>();
-	public ArrayList<Vec3> vertices = new ArrayList<Vec3>();
-	public ArrayList<Integer> triIndices = new ArrayList<Integer>();
+	public ArrayList<Vec3> Vertices = new ArrayList<Vec3>();
+	public ArrayList<Integer> Indices = new ArrayList<Integer>();
 	
 	public Mesh(String path)
 	{
-		LoadObjReturn r1 = LoadObj.File(path);
-		vertices = r1.vertices;
-		triIndices = r1.indices;
+		LoadObj.File(path, this);
 	}
 	
 	public static int CoordsToScreen(float xy, int screen) {		
@@ -34,10 +30,10 @@ public class Mesh {
 	}
 
 	public ArrayList<Triangle> DrawMesh(Mat4 model, int P_W, int P_H, Camera cam, Boolean culling, Light light, Color baseColor) {
-		if (triIndices.size() % 3 == 0) {
+		if (Indices.size() % 3 == 0) {
 			ArrayList<Triangle> triangles = new ArrayList<Triangle>();
 			
-			for (int i = 0; i < triIndices.size(); i+=3) {
+			for (int i = 0; i < Indices.size(); i+=3) {
 			
 				ArrayList<Vec3> viewPoints = new ArrayList<Vec3>();
 				ArrayList<Vec3> cullingPoints = new ArrayList<Vec3>();
@@ -45,9 +41,9 @@ public class Mesh {
 				//Transforms the points into view space for clipping
 				for (int j = 0; j < 3; j++) {
 					Vec4 origPoint = new Vec4(
-						vertices.get(triIndices.get(i + j)).x, 
-						vertices.get(triIndices.get(i + j)).y, 
-						vertices.get(triIndices.get(i + j)).z,
+						Vertices.get(Indices.get(i + j)).x, 
+						Vertices.get(Indices.get(i + j)).y, 
+						Vertices.get(Indices.get(i + j)).z,
 						1.0f );	
 					
 					//Transform to world space
@@ -68,7 +64,6 @@ public class Mesh {
 								
 				Vec3 reversedLight = Math3D.Normalize(Vec3.Sub(light.pos, light.direction));
 				
-				//Vec3 lightToVertex = Math3D.Normalize(Vec3.Sub(light.pos, cullingPoints.get(0)));
 				Vec3 lightToVertex = Math3D.Normalize(Vec3.Sub(light.pos, cullingPoints.get(0)));
 				float distLV = (float) (Math.pow(lightToVertex.x, 2) + Math.pow(lightToVertex.y, 2) + Math.pow(lightToVertex.z, 2)); 
 				
@@ -86,11 +81,10 @@ public class Mesh {
 							viewPoints.get(0), viewPoints.get(1), viewPoints.get(2), cam.getCamPos());
 					
 					
-					//Draws the clipped vertices onto the screen, now with projection 
+					//Draws the clipped Vertices onto the screen, now with projection 
 					if (clipReturn.size() % 3 == 0) {
 						for (int k = 0; k < clipReturn.size(); k+=3) {
 	
-							//ArrayList<Vec2I> screenPoints = new ArrayList<Vec2I>();
 							ArrayList<Vec3> triPoints = new ArrayList<Vec3>();
 							
 							for (int j = 0; j < 3; j++) {					

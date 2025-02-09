@@ -44,8 +44,6 @@ public class Math3D {
 			new Vec4(0.0f, 0.0f, 1.0f, 0.0f),
 			new Vec4(-Dot(xAxis, camPos), -Dot(yAxis, camPos), -Dot(zAxis, camPos), 1.0f)); //CamPos gets projected onto the normalized new axis
 				
-			//(-camPos.x, -camPos.y, -camPos.z, 1.0f) not right
-
 		return Mat4.Mul(rotation, translation);
 		
 	}
@@ -60,8 +58,6 @@ public class Math3D {
 		m.c2.y = 1 / (tanHalfFov);
 		m.c3.z = -(far + near) / (far - near);
 		m.c4.z = -(2 * far * near) / (far - near);
-		//m.c3.z = far / (far - near);
-		//m.c4.z = (-far * near) / (far - near);
 		m.c3.w = 1;
 		m.c4.w = 0;
 	    return m;

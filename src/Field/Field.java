@@ -27,19 +27,26 @@ public class Field {
 	private Timer timer;
 	
 	public Field(SwingSetup.Panel panel) {
-		InitFieldValues();
+		InitFieldValues(0);
 		
 		timer = new Timer();
 		timer.schedule(new TimerTask() { public void run() { CalcFieldPerTick(); }}, 
 				2000, 2000);
 	}
 	
-	public void InitFieldValues() {
-		//figOscillator();
-		//figGlider();
-		//figStable();
-		//figBlinker(); //too near at the edge!!
-		figRandom();
+	public void InitFieldValues(int presetIndex) {
+		if (presetIndex == 0)
+			FigureRandom();
+		else if (presetIndex == 1)
+			FigureOscillator();
+		else if (presetIndex == 2)
+			FigureGlider();
+		else if (presetIndex == 3)
+			FigureStable();
+		else if (presetIndex == 4)
+			FigureBlinker(); //too close to the edge!!
+		else
+			FigureRandom();
 	}
 	
 	private Color NormalToRGB(float nr, float ng, float nb) {
@@ -108,12 +115,10 @@ public class Field {
 						else
 							x++;
 					}
-	
-					
+						
 					//Change the field values
 					if (arrField1[i][j][l] == false) { // First condition
-						//2333 or 1987 or ..4.
-						if (iNeighbourCount == 5) { // eig 3
+						if (iNeighbourCount == 5) {
 							arrField2[i][j][l] = true;
 						}
 					} 
@@ -137,23 +142,21 @@ public class Field {
 					arrField2[i][j][l] = false;
 				}
 			}
-		}
-		
-		/*int counter = 0;
-		
+		}		
+	}
+
+	private void ClearField() {
 		for (int i = 0; i < FIELD_WIDTH; i++) {
 			for (int j = 0; j < FIELD_HEIGHT; j++) {
 				for (int l = 0; l < FIELD_LENGTH; l++) {
-					if(arrField1[i][j][l] == false)
-						counter++;
-					if(counter==FIELD_WIDTH*FIELD_HEIGHT*FIELD_LENGTH) //Checks if the field is empty
-						timer.cancel();
+					arrField1[i][j][l] = false;
 				}
 			}
-		}*/
+		}
+		
 	}
-
-	private void figRandom() {
+	
+	private void FigureRandom() {
 		Random r = new Random();
 		for (int i = 1; i < FIELD_WIDTH-1; i++) {
 			for (int j = 1; j < FIELD_HEIGHT-1; j++) {
@@ -164,7 +167,8 @@ public class Field {
 		}
 	}
 	
-	private void figOscillator() {
+	private void FigureOscillator() {
+		ClearField();
 		arrField1[5][5][5] = true;
 		arrField1[6][5][6] = true;
 		arrField1[7][5][6] = true;
@@ -175,7 +179,8 @@ public class Field {
 		arrField1[7][6][5] = true;
 	}
 	
-	private void figGlider() {
+	private void FigureGlider() {
+		ClearField();
 		arrField1[4][6][5] = true;
 		arrField1[4][6][4] = true;
 		arrField1[5][6][6] = true;
@@ -188,7 +193,8 @@ public class Field {
 		arrField1[6][6][3] = true;
 	}
 
-	private void figStable() {
+	private void FigureStable() {
+		ClearField();
 		arrField1[6][3][2] = true;
 		arrField1[6][4][2] = true;
 		arrField1[6][4][3] = true;
@@ -197,7 +203,8 @@ public class Field {
 		arrField1[7][3][3] = true;
 	}
 	
-	private void figBlinker() {
+	private void FigureBlinker() {
+		ClearField();
 		arrField1[8][8][8] = true;
 		arrField1[7][8][8] = true;
 		arrField1[9][8][8] = true;

@@ -19,7 +19,6 @@ public class Main extends JFrame {
 		pWindow = new Panel(WINDOW_W, WINDOW_H);
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//this.setPreferredSize(new Dimension(WINDOW_W, WINDOW_H));
 		this.add(pWindow);
 		this.pack();
 		this.setLocationRelativeTo(this);
